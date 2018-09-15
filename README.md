@@ -21,15 +21,15 @@ Project allow us to configure multiple Oauth providers in application.yml file p
 
 ## Key details of the project
 
-Before configuring the new providers, Application has to registered as web application with Oauth providers by 
+Before configuring the new providers, Application has to registered as web application with Oauth2 providers by 
 providing domain url and call back url. Post registering the application we get Client Id and client secret.
 Authorization url and Access token url can be found in respective Outh vendors site
-More details about google api can be fount here.
+More details about oauth2 google api can be found here.
 https://developers.google.com/identity/protocols/OAuth2
 
 ### Steps to configure
 
-New auth provisers can be configured by adding required endpoints in application.yml file 
+New auth provider can be configured by adding required endpoints in application.yml file 
 ```
 google:
   client:
@@ -89,6 +89,31 @@ Add Single SignOn Filter (SSO Filter) for each vendors in WebSecurityConfig clas
         httpSecurity.addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 ```
+Index.html has link to all providers
+
+```
+<h1>Login</h1>
+<div class="container" ng-show="!home.authenticated">
+    <div>
+        With Facebook: <a href="/login/facebook">click here</a>
+    </div>
+    <div>
+        With Google: <a href="/login/google">click here</a>
+    </div>
+    <div>
+        With GitHub: <a href="/login/github">click here</a>
+    </div>
+</div>
+```
+
+### Steps to Run the project
+
+* Import this project to any IDE like eclipse,IntelliJ etc 
+* click on run button Project will run inside enbedded tomcat.
+* user will be presented with index.html page on http://localhost:8080 with options to select Oauth2 providers for Oauth2 login
+* select any one and provider and page wil be redirected to respective oauth2 providers login page
+* enter the required credentials and upon successful login user will be redirected back to index.html
+
 
 
 
