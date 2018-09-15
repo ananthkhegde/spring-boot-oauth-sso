@@ -26,6 +26,9 @@ providing domain url and call back url. Post registering the application we get 
 Authorization url and Access token url can be found in respective Outh vendors site
 More details about google api can be fount here.
 https://developers.google.com/identity/protocols/OAuth2
+
+### Steps to configure
+
 New auth provisers can be configured by adding required endpoints in application.yml file 
 ```
 google:
@@ -40,6 +43,54 @@ google:
     userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
     preferTokenInfo: true
 ```
+Add Single SignOn Filter (SSO Filter) for each vendors in WebSecurityConfig class file
+
+```
+ private Filter ssoFilter() {
+        CompositeFilter filter = new CompositeFilter();
+        List<Filter> filters = new ArrayList<>();
+        filters.add(ssoFilter(facebook(), "/login/facebook"));
+        filters.add(ssoFilter(github(), "/login/github"));
+        filters.add(ssoFilter(microsoft(), "/login/microsoft"));
+        filters.add(ssoFilter(google(), "/login/google"));
+        filter.setFilters(filters);
+        return filter;
+    }
+
+    private Filter ssoFilter(ClientResources client, String path) {
+        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
+        filter.setRestTemplate(template);
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(
+                client.getResource().getUserInfoUri(), client.getClient().getClientId());
+        tokenServices.setRestTemplate(template);
+        filter.setTokenServices(tokenServices);
+        //
+       tokenServices.setPrincipalExtractor(client.getPrincipalExtractor());
+        filter.setAllowSessionCreation(false);
+        filter.setSessionAuthenticationStrategy(new NullAuthenticatedSessionStrategy());
+        return filter;
+    }
+
+ @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and()
+                .logout().logoutSuccessUrl("/").and()
+                .authorizeRequests()
+                .antMatchers(
+                        "/index.html",
+                        "/",
+                        "/login**",               ,
+                        "/logout**").permitAll()
+                .anyRequest().authenticated();
+        // Custom JWT based security filter
+        httpSecurity.addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+```
+
+
 
 
 
