@@ -91,6 +91,13 @@ Add Single SignOn Filter (SSO Filter) for each vendors in WebSecurityConfig clas
         httpSecurity.addFilterBefore(ssoFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 ```
+Logged in User details can be found with below mapping
+```
+@RequestMapping("/user")
+public Principal user(Principal principal) {
+        return principal;
+}
+```
 Index.html has link to all providers
 
 ```
