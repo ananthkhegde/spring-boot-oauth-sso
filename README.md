@@ -2,7 +2,9 @@
 Oauth based single sign on using spring boot
 
 This is a spring boot demo project to illustrate Single Sign On with various Oauth2 identity providers such as GOOGLE/FACEBOOK/GITHUB etc
-Project allow us to configure multiple Oauth providers in application.yml file present in resource folder
+Project allow us to configure multiple Oauth providers in application.yml file present in resource folder.
+
+Basic details of the projects are explained so that it is easy to tweak as per your requirement.
 
 ## Maven dependencies
 
@@ -108,8 +110,8 @@ Index.html has link to all providers
 
 ### Steps to Run the project
 
-* Import this project to any IDE like eclipse,IntelliJ etc 
-* click on run button Project will run inside enbedded tomcat.
+* import this project to any IDE like eclipse,IntelliJ etc 
+* click on run button Project will run inside embedded tomcat.
 * user will be presented with index.html page on http://localhost:8080 with options to select Oauth2 providers for Oauth2 login
 * select any one and provider and page wil be redirected to respective oauth2 providers login page
 * enter the required credentials and upon successful login user will be redirected back to index.html
